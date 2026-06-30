@@ -101,7 +101,8 @@ description: >-
 判定用户意图属于哪类，**读取对应工作流辅助文件**；拿不准就用一句话与用户确认：
 
 - **询问 / 解释**（答疑、读代码、查文档、定位原理；只读，不改文件 / 不动硬件）→ 读取 [workflow-ask](workflow-ask/SKILL.md)。
-- **修改 / 修复**（在既有工程改配置 / 小段代码 / 修 bug；有限范围写 + 实测）→ 读取 [workflow-modify](workflow-modify/SKILL.md)。
+- **修改 / 修复**（在既有工程改配置 / 小段代码、**已知要改什么**；有限范围写 + 实测）→ 读取 [workflow-modify](workflow-modify/SKILL.md)。
+- **调试 / 排障**（现象异常但**根因未知**：崩溃 / HardFault、卡死、外设无反应、偶发；需复现 + runtime 证据定位根因）→ 读取 [workflow-debug](workflow-debug/SKILL.md)。
 - **开发 / 新建**（新功能 / 新模块 / 从零搭；多步、跨多工具、需规划）→ 读取 [workflow-develop](workflow-develop/SKILL.md)。
 
 ## 【附】工具辅助文件索引（渐进式披露，按需读取）

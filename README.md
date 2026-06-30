@@ -13,6 +13,7 @@ zephyr-expert/
 ├── workflow-ask/             # 工作流 A：询问 / 解释（只读）
 ├── workflow-modify/          # 工作流 B：修改 / 修复（有限范围改动 + 实测）
 ├── workflow-develop/         # 工作流 C：开发 / 新建（多步、从零搭建）
+├── workflow-debug/            # 工作流 D：调试 / 排障（复现 + 证据定位根因）
 │
 ├── zephyr-build/             # 工具指南：west build、Kconfig、Devicetree、overlay
 ├── zephyr-flash/             # 工具指南：烧录、复位、擦除、设备管理
@@ -62,12 +63,13 @@ Claude Code 会自动扫描 `~/.claude/skills/` 下的 `SKILL.md`，并在 `avai
 
 ---
 
-## 三种工作流
+## 四种工作流
 
 | 场景 | 工作流 | 适用描述 |
 |------|--------|---------|
 | 答疑 / 查文档 / 读代码 | `workflow-ask` | 只读，不改文件、不动硬件 |
-| 改配置 / 修 bug / 改小段代码 | `workflow-modify` | 有限范围改动 + build → flash → 串口验证闭环 |
+| 改配置 / 改小段代码（已知改什么） | `workflow-modify` | 有限范围改动 + build → flash → 串口验证闭环 |
+| 崩溃 / 卡死 / 外设无反应（根因未知） | `workflow-debug` | 复现 + runtime 证据，假设驱动定位根因，转 modify 修复 |
 | 新功能 / 新模块 / 从零建工程 | `workflow-develop` | 先 plan 文档，按阶段开发，里程碑验收 |
 
 ---
