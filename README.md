@@ -23,6 +23,7 @@ zephyr-expert/
 ├── nrf54l-sqspi/             # 专项：nRF54L sQSPI soft peripheral / Zephyr MSPI
 ├── zephyr-custom-driver/     # 专项：out-of-tree 自定义驱动接入
 ├── nrfutil-memory/           # 专项：nrfutil device 读写 RRAM / UICR / OTP / 外部 flash
+├── ble-dtm/                  # 专项：BLE Direct Test Mode 射频 / PHY 测试
 │
 └── clean-agent/              # 辅助：零上下文只读子 Agent 独立验收
 ```
@@ -88,11 +89,12 @@ Claude Code 会自动扫描 `~/.claude/skills/` 下的 `SKILL.md`，并在 `avai
 | `west build`、Kconfig、Devicetree overlay | `zephyr-build/SKILL.md` |
 | 烧录 hex、复位、擦除、恢复设备 | `zephyr-flash/SKILL.md` |
 | 读串口 / boot log / 选 COM 口 | `zephyr-serial-log/SKILL.md` |
-| GDB、J-Link、RTT、crash 分析 | `zephyr-debug/SKILL.md` |
+| GDB / J-Link 直连、RTT、fault 寄存器 / crash 分析、APPROTECT | `zephyr-debug/SKILL.md` |
 | nRF54L 引脚分配 / pinctrl / GPIO 跨域 | `nrf54l-pinctrl/SKILL.md` |
 | nRF54L sQSPI / MSPI bus | `nrf54l-sqspi/SKILL.md` |
 | out-of-tree 自定义驱动 | `zephyr-custom-driver/SKILL.md` |
 | nrfutil 读写 RRAM / UICR / OTP / 外部 flash | `nrfutil-memory/SKILL.md` |
+| BLE DTM / 射频 PHY 测试 | `ble-dtm/SKILL.md` |
 
 ---
 

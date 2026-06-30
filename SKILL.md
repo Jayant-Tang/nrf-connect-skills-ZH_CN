@@ -116,3 +116,4 @@ description: >-
 - **nRF54L sQSPI / Zephyr MSPI**（`nordic,nrf-sqspi`、`SDP_MSPI_*`、`cpuflpr_vpr`、sQSPI 外设不通）→ 读取 [nrf54l-sqspi](nrf54l-sqspi/SKILL.md)。
 - **Zephyr 自定义驱动接入**（out-of-tree driver、`ZEPHYR_EXTRA_MODULES`、`module.yml`、binding、`DEVICE_DT_INST_DEFINE`）→ 读取 [zephyr-custom-driver](zephyr-custom-driver/SKILL.md)。
 - **用 nrfutil 直接读写存储**（RRAM/RAM/外部 QSPI flash、UICR/OTP 的读写擦 dump）→ 读取 [nrfutil-memory](nrfutil-memory/SKILL.md)。
+- **BLE 射频 / DTM 测试**（Direct Test Mode、2-wire UART 19200、TX/RX/PER、射频认证）→ 读取 [ble-dtm](ble-dtm/SKILL.md)。
