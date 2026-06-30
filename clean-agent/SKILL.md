@@ -51,13 +51,13 @@ claude -p --output-format text "$(cat prompt.txt)"
 不要修改任何文件。
 
 ## 验收标准
-<粘贴 plan 文档或用户需求中的验收标准>
+<粘贴 .agent/plan.md 或用户需求中的验收标准>
 
 ## 复现步骤
 <允许执行的构建、烧录、串口/RTT、测试或只读检查步骤>
 
 ## 允许读取的关键路径
-<工程路径、plan 文档、build 目录、日志路径>
+<工程路径、.agent/plan.md、build 目录、.agent/logs/>
 
 ## 输出格式
 PASS: <证据>
@@ -71,8 +71,8 @@ FAIL: <失败点和证据>
 #!/usr/bin/env bash
 # usage: bash clean-agent/validate.sh [plan_doc] [repro_doc]
 set -e
-PLAN="${1:-plan.md}"
-REPRO="${2:-repro.md}"
+PLAN="${1:-.agent/plan.md}"
+REPRO="${2:-.agent/repro.md}"
 VALIDATOR="${VALIDATOR:-agent}"   # 设 VALIDATOR=claude 切换到 Claude Code
 
 PROMPT="你是独立验收员。只读检查当前工程。
@@ -92,8 +92,8 @@ fi
 Windows PowerShell 等效：
 
 ```powershell
-$plan = if ($args[0]) { $args[0] } else { "plan.md" }
-$repro = if ($args[1]) { $args[1] } else { "repro.md" }
+$plan = if ($args[0]) { $args[0] } else { ".agent/plan.md" }
+$repro = if ($args[1]) { $args[1] } else { ".agent/repro.md" }
 $tool = if ($env:VALIDATOR) { $env:VALIDATOR } else { "agent" }
 $prompt = "你是独立验收员。只读检查当前工程。阅读 $plan 中的验收标准，并按 $repro 中的复现步骤验证。不要修改文件。只输出 PASS 或 FAIL + 简短原因和证据。"
 $result = & $tool -p --output-format text $prompt
@@ -117,6 +117,6 @@ if ($result -match "^PASS") { exit 0 } else { exit 1 }
 
 ## 注意事项
 
-- **plan 文档是跨 agent 的唯一信息载体**：验收标准写入 plan 文档，不要口头传递。
+- **plan 文档（`.agent/plan.md`）是跨 agent 的唯一信息载体**：验收标准写入 plan 文档，不要口头传递。
 - **硬件命令白名单**：复位、串口读取、RTT、测试可在复现步骤中列明；破坏性命令不能由验收 agent 自行决定。
 - **退出码**：脚本返回 `0` 表示通过，`1` 表示失败。

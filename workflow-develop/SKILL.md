@@ -21,7 +21,7 @@ description: >-
 
 ## 执行步骤
 
-1. **进入 plan mode**：写 plan 文档，包含目标、非目标、目标板、qualified board target、NCS 版本、外设/协议栈、硬件连接、验收标准、阶段任务、风险和回退点。
+1. **进入 plan mode**：写 plan 文档（存 `.agent/plan.md`），包含目标、非目标、目标板、qualified board target、NCS 版本、外设/协议栈、硬件连接、验收标准、阶段任务、风险和回退点。
 2. **查证前置事实**：用 Nordic MCP 确认 board target、overlay 命名、示例路径、Kconfig/Devicetree/sysbuild 用法、外设限制和 `nrfutil` 命令。MCP 不通时停止。
 3. **确认方案**：向用户说明架构、文件布局、验证方式和需要用户配合的硬件动作；用户确认后实施。
 4. **拆分阶段**：每阶段只交付一个可构建、可运行、可观察的增量。独立可并行任务使用 readonly sub-agent 或隔离 worktree；主线只保留架构、接口和验收状态。
@@ -32,7 +32,7 @@ description: >-
 
 ## 计划文档要求
 
-计划文档是跨 agent 的唯一持久状态，至少包含：
+计划文档（`.agent/plan.md`）是跨 agent 的唯一持久状态，至少包含：
 
 ```markdown
 # Plan
@@ -50,7 +50,7 @@ description: >-
 ## 风险与回退
 ```
 
-上下文不足、**或发现返工级偏差（需求理解错 / 架构方向错 / 需推翻重来）时**，先停下与用户确认，再写 `Handover.md`，记录 plan 路径、当前阶段、已完成验证、未解决问题和下一步命令，然后 clear。原始 plan 文档只更新状态，不重写历史决策，除非用户同意。
+上下文不足、**或发现返工级偏差（需求理解错 / 架构方向错 / 需推翻重来）时**，先停下与用户确认，再写 `.agent/Handover.md`，记录 plan 路径、当前阶段、已完成验证、未解决问题和下一步命令，然后 clear。原始 plan 文档只更新状态，不重写历史决策，除非用户同意。
 
 ## 质量门槛
 

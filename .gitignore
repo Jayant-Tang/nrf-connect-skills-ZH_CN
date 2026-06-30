@@ -1,0 +1,2 @@
+# 跨 Agent 状态管理的临时产物（plan / Handover / 复现步骤 / 长日志等），不进版本库
+.agent/

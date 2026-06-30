@@ -78,7 +78,7 @@ nrfutil toolchain-manager launch --ncs-version=<version> -- <command>
 
 ## 日志闭环
 
-构建日志必须重定向到 build 目录，只读取末尾和错误摘要，不把完整日志贴进上下文。
+构建日志重定向到 `.agent/logs/`（或 build 目录），只读取末尾和错误摘要，不把完整日志贴进上下文。跨 Agent 临时文件统一放工程根 `.agent/`，见总纲「跨 Agent 状态管理」。
 
 ```bash
 nrfutil sdk-manager toolchain launch --ncs-version=<version> -- \

@@ -77,7 +77,7 @@ Claude Code 会自动扫描 `~/.claude/skills/` 下的 `SKILL.md`，并在 `avai
 - **知识源优先级**：Skill 内置指南 → Nordic MCP → 本地 NCS 源码 → 官方文档，不在缺信息时强行推进。
 - **防幻觉**：串口乱码、内存 dump、截断日志不做脑补；Nordic MCP 不通时停止而非猜测。
 - **独立验收**：所有修改/开发产出在自测通过后，派零上下文只读子 Agent 独立判定 PASS/FAIL。
-- **跨 Agent 状态**：复杂任务先写 plan 文档；上下文将满时写 `Handover.md` 接力，不丢进度。
+- **跨 Agent 状态**：plan、Handover、日志等过程产物统一放工程根 `.agent/`（有 git 则记得把`.agent/`加入 `.gitignore`）；复杂任务的 plan mode 写 `.agent/plan.md`，上下文将满时写 `.agent/Handover.md` 接力，不丢进度。
 
 ---
 
