@@ -14,11 +14,13 @@ description: >-
 
 1. **分诊**：确认问题只需要只读回答。出现“修改、修复、烧录、串口验证、跑测试、新建工程”等动作时，停止本工作流并切到 [workflow-modify](../workflow-modify/SKILL.md) 或 [workflow-develop](../workflow-develop/SKILL.md)；现象异常但**根因未知**（崩溃 / 卡死 / 外设无反应等）需复现定位时，切到 [workflow-debug](../workflow-debug/SKILL.md)。
 2. **锁定上下文**：明确芯片、开发板、board target、NCS 版本、工程路径、目标现象。缺少影响结论的关键信息时，先按知识源查证；仍无法确定时向用户提一个明确问题。
-3. **查证顺序**：先用当前 skill 和相关工具 skill；命令语义用 `--help`；Nordic、Zephyr、NCS、nRF、`west`、board、`nrfutil` 相关事实必须先查 Nordic MCP；再查当前工程源码、NCS 源码或本地文档。Nordic MCP 不通时停止并要求用户恢复认证。
-4. **控制上下文**：大范围源码检索交给 `generalPurpose` sub-agent（`readonly: true`），要求只返回结论、文件路径和关键证据；主线只保留最终证据。
-5. **形成答案**：区分“上游 Zephyr 行为”和“NCS/Nordic 特有行为”；结论后标明来源类型（MCP URL、MCP resource、工程文件、NCS 源码路径）。
-6. **交叉验证**：会影响后续实现、烧录、硬件连接、OTP/UICR、recover/erase 的结论，必须用第二个来源复核；必要时派全新 readonly sub-agent 按结论和来源独立检查。
-7. **输出**：先给结论，再给依据和操作建议。不能确认的内容直接说明缺少哪项信息，不补全、不猜测。
+3. **先做 Nordic MCP 预检查**：凡是涉及 Nordic、Zephyr、NCS、nRF、`west`、board、`nrfutil` 的事实判断，先确认当前会话能看到 Nordic MCP 的 server / tools，再执行一次最小只读探针，确认 server 可访问且已认证。
+4. **预检查失败就停**：如果看不到 Nordic MCP 的 server / tools，或探针失败、认证失效、权限/网络/工具异常导致无法完成探针，统一视为 **MCP 不通**。此时停止后续查证，不得继续输出相关事实性结论；只能向用户说明当前阻塞并要求恢复 MCP，除非用户明确同意放弃 MCP。
+5. **查证顺序**：先用当前 skill 和相关工具 skill；命令语义用 `--help`；Nordic、Zephyr、NCS、nRF、`west`、board、`nrfutil` 相关事实必须先查 Nordic MCP；再查当前工程源码、NCS 源码或本地文档。
+6. **控制上下文**：大范围源码检索交给 `generalPurpose` sub-agent（`readonly: true`），要求只返回结论、文件路径和关键证据；主线只保留最终证据。
+7. **形成答案**：区分“上游 Zephyr 行为”和“NCS/Nordic 特有行为”；结论后标明来源类型（MCP URL、MCP resource、工程文件、NCS 源码路径）。
+8. **交叉验证**：会影响后续实现、烧录、硬件连接、OTP/UICR、recover/erase 的结论，必须用第二个来源复核；必要时派全新 readonly sub-agent 按结论和来源独立检查。
+9. **输出**：先给结论，再给依据和操作建议。不能确认的内容直接说明缺少哪项信息，不补全、不猜测。
 
 ## 防幻觉要求
 

@@ -15,12 +15,12 @@ description: >-
 - 已知该改什么、只差动手 → 直接用 [workflow-modify](../workflow-modify/SKILL.md)。
 - 纯查原理、不动硬件 / 不改文件 → 用 [workflow-ask](../workflow-ask/SKILL.md)。
 
-## 开工前 GATE（全部通过前，禁止改业务代码）
+## 开工前 GATE（全部通过前，禁止执行后续步骤）
 
 逐项确认，任一不满足就停，不要凭"我大概知道是哪"的猜测直接改：
 
 1. **读懂项目意图**：先读 README / 设计文档 / 注释 / 既有 plan / Handover / git log，能说清"它本来该怎么工作"。否则会把原始设计（如低功耗时序）当 bug 改掉。
-2. **知识源可用**：Nordic MCP 能用；不通就停下让用户恢复，不要 workaround 绕过（见总纲铁律 2）。
+2. **知识源可用**：先完成 Nordic MCP 预检查。必须确认当前会话能看到 Nordic MCP 的 server / tools，并完成一次最小只读探针；只要出现 tools 不可见、探针失败、认证失效、或因权限/网络/工具异常而无法证明服务可用，统一视为 **MCP 不通**。MCP 不通就停下让用户恢复，不要 workaround 绕过（见总纲铁律 2）。
 3. **目标齐全**：NCS 版本、board target、工程路径、SN / 串口端口都明确，缺则先确认。
 4. **能复现 + 有证据**：能**稳定复现**现象，且至少拿到一份 **runtime 证据**（串口日志 / RTT / fault 寄存器 / GDB 状态）。复现不了或没有证据，先去取证，**不准凭猜改代码**。
 

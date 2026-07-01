@@ -12,12 +12,12 @@ description: >-
 
 根因未知的故障排查先走 [workflow-debug](../workflow-debug/SKILL.md)，定位到根因后再回到本工作流修复。
 
-## 开工前 GATE（全部通过前，禁止修改任何文件）
+## 开工前 GATE（全部通过前，禁止执行后续步骤）
 
 逐项确认，任一不满足就停下处理，不要因为"自己能搞定"而跳过：
 
 1. **读懂项目意图**：先读 README / 设计文档 / 注释 / 既有 plan / Handover / git log，能说清这个项目"为什么这么做"。改既有项目时这是第一步，**优先于读源码**——否则可能把原始设计目标当成 bug 改掉。但**注意风险**：用户在sample基础上修改，但忘记了更新README，导致 README 和实际项目不一致。
-2. **知识源可用**：Nordic MCP 能用；不通就停下让用户恢复，不要用 workaround 绕过（见总纲铁律 2）。
+2. **知识源可用**：先完成 Nordic MCP 预检查。必须确认当前会话能看到 Nordic MCP 的 server / tools，并完成一次最小只读探针；只要出现 tools 不可见、探针失败、认证失效、或因权限/网络/工具异常而无法证明服务可用，统一视为 **MCP 不通**。MCP 不通就停下让用户恢复，不要用 workaround 绕过（见总纲铁律 2）。
 3. **目标齐全**：NCS 版本、board target、工程路径、Jlink Serial Number (SN) / 串口端口都明确，缺则先确认。
 4. **复杂度判定**：命中下列任一 → **必须进 plan mode 文档并取得用户逐条签字**，再动手：
    - 版本迁移 / 移植
@@ -31,7 +31,7 @@ description: >-
 
 1. **确认范围**：列出要改的功能、文件类型（C/Kconfig/Devicetree/overlay/sysbuild）、目标板、NCS 版本、验证方式。缺 NCS 版本、board target、工程路径、SN 或串口端口时先确认。
 2. **判定复杂度**（见上方 GATE 第 4 条）：单文件或局部配置改动可直接执行；**版本迁移 / 移植**、跨多文件、多子系统、驱动、协议栈、启动链、分区、pinctrl 或硬件风险的改动，先进入 plan mode，写 plan 文档并取得用户**逐条确认**后再动手。拿不准复杂度时按"复杂"处理。
-3. **查证事实**：Nordic/NCS/Zephyr 命令、board target、overlay 文件名、VCOM、pinctrl、`nrfutil` 行为必须先查 Nordic MCP。MCP 不通时停止。
+3. **查证事实**：Nordic/NCS/Zephyr 命令、board target、overlay 文件名、VCOM、pinctrl、`nrfutil` 行为必须先查 Nordic MCP；再结合当前工程与 NCS 源码核对。
 4. **记录基线**：动手前读取 git 状态与目标文件当前内容，保留本次改动边界。工作区已有用户改动时只叠加必要修改，不还原用户改动。
 5. **编辑前说明**：用一句话说明将修改哪些文件、为什么改、影响面是什么。涉及破坏性硬件动作时必须先取得用户明确授权。
 6. **执行修改**：按现有工程风格改最小范围；配置改动优先放在应用层 `prj.conf`、`sysbuild.conf`、`boards/<normalized-board-target>.overlay` 或明确的 overlay/conf fragment，不改 SDK 上游文件。改自定义驱动、binding、`module.yml` 或 `DEVICE_DT_INST_DEFINE` 时读取 [zephyr-custom-driver](../zephyr-custom-driver/SKILL.md)；改 nRF54L sQSPI、`nordic,nrf-sqspi`、`cpuflpr_vpr` 或 MSPI 子设备时读取 [nrf54l-sqspi](../nrf54l-sqspi/SKILL.md)。
