@@ -153,6 +153,29 @@ west build -d <selected-build-dir> --snippet rtt-console
 
 读取方式按环境选择：`west rtt`、JLinkRTTViewer、JLinkRTTLogger、nRF Connect Serial Terminal 的 RTT 模式。无 RTT 输出时检查是否启用了 RTT backend、是否被 UART console 冲突、是否连接了正确设备。
 
+### Windows CLI 重定向
+
+较旧 Zephyr/NCS 的 J-Link runner 在 Windows PowerShell 中执行 `west rtt`，可能因 Python `select()` 监听非 socket 的 `stdin` 而报 `WinError 10038`。该问题由 Zephyr PR #100473 修复；当前 SDK 未包含修复时，使用 SEGGER `JLinkRTTLogger`，不要反复调整 RTT Kconfig。
+
+先用 `nrfutil device list` 确认只有一个目标设备。PowerShell 示例：
+
+```powershell
+$log = ".\.agent\logs\rtt_$(Get-Date -Format 'yyyyMMdd_HHmmss').log"
+
+JLinkRTTLogger.exe `
+  -Device <jlink-device-name> `
+  -If SWD `
+  -Speed 4000 `
+  -RTTChannel 0 `
+  $log
+```
+
+- 最后一个位置参数 `$log` 才是 target RTT 数据文件；`>`、`2>&1` 或 `Tee-Object` 只能重定向 Logger 自身的连接状态和传输速率。
+- 需要同时保存 Logger 诊断信息时，在命令末尾追加 `2>&1 | Tee-Object "$log.runner.log"`。
+- 自动采集时后台启动 Logger，确认出现 `Searching for RTT Control Block...OK.` 后执行测试；到达采集时限后终止 Logger，再读取 `$log`。Logger 可能缓存文件写入，运行期间文件为空不代表没有收到 RTT 数据。
+- 捕获 boot log 时先执行 `nrfutil device reset --serial-number <SN>`，随后立即启动 Logger；RTT ring buffer 可保留启动阶段尚未读取的数据。
+- nRF54L15 DK 的 `<jlink-device-name>` 通常为 `NRF54L15_M33`，但仍以 build runner 配置和 J-Link 支持列表为准。
+
 ## 在线诊断（halt → 决策表 → 寄存器 / 外设）
 
 固件跑飞或卡死时，先 halt 看 PC 定位状态，再决定下一步：
