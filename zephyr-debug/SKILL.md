@@ -21,12 +21,7 @@ description: >-
 
 ## west 调试命令
 
-所有命令都加 NCS 工具链 wrapper：
-
-```bash
-nrfutil sdk-manager toolchain launch --ncs-version=<version> -- \
-  west debug -d <selected-build-dir>
-```
+工具链模式继承 [zephyr-build](../zephyr-build/SKILL.md)；下表按 env 模式直接执行：
 
 | 目的 | 命令 |
 |------|------|
@@ -43,7 +38,7 @@ nrfutil sdk-manager toolchain launch --ncs-version=<version> -- \
 优先用上面的 `west debug` / `west attach`（已封装 server 启动与 gdb）。仅在需要脚本化批量取证、`west` runner 不可用、或要同时驱动多核时才手动直连。**用 NCS 工具链自带的 `arm-zephyr-eabi-gdb`，不要用系统 gdb。**
 
 ```bash
-GDB="arm-zephyr-eabi-gdb"            # 经 nrfutil sdk-manager toolchain launch 运行时在 PATH 内
+GDB="arm-zephyr-eabi-gdb"            # 模式 A 初始化后由当前 PATH 提供
 JLINK_SERVER="JLinkGDBServerCL.exe"  # SEGGER 安装目录；多版本取最新
 
 # 1. 起 server（后台，日志写 .agent/logs/）
@@ -54,8 +49,7 @@ JLINK_SERVER="JLinkGDBServerCL.exe"  # SEGGER 安装目录；多版本取最新
 for i in $(seq 1 30); do netstat -an | grep -q ":2331.*LISTEN" && break; sleep 1; done
 
 # 3. batch 取证（抓 PC/LR/SP + 反汇编 + 回溯）
-nrfutil sdk-manager toolchain launch --ncs-version=<version> -- \
-  "$GDB" -batch -ex "target remote localhost:2331" -ex "monitor halt" \
+"$GDB" -batch -ex "target remote localhost:2331" -ex "monitor halt" \
     -ex "print/x \$pc" -ex "print/x \$lr" -ex "print/x \$sp" \
     -ex "x/4i \$pc" -ex "backtrace 10" \
     -ex "detach" -ex "quit" <build>/zephyr/zephyr.elf
@@ -63,6 +57,8 @@ nrfutil sdk-manager toolchain launch --ncs-version=<version> -- \
 # 4. 用完必杀 server（务必执行）
 taskkill //F //IM JLinkGDBServerCL.exe
 ```
+
+上面的 GDB 命令使用模式 A；模式 B 须加 launch wrapper。
 
 - `<jlink-device-name>` 是 J-Link 设备名（如 `NRF54L15_M33`、`nRF52840_xxAA`），**与 qualified board target 不是一回事**，见下方设备速查。
 - ELF 必须与已烧录固件同一次构建；多核 / sysbuild 各镜像用各自 ELF（见下方 ELF 路径）。
@@ -191,8 +187,7 @@ JLinkRTTLogger.exe `
 **读 fault 寄存器**（J-Link 可能不支持一行多寄存器，逐个读）：
 
 ```bash
-nrfutil sdk-manager toolchain launch --ncs-version=<version> -- \
-  arm-zephyr-eabi-gdb -batch -ex "target remote localhost:2331" -ex "monitor halt" \
+arm-zephyr-eabi-gdb -batch -ex "target remote localhost:2331" -ex "monitor halt" \
     -ex "monitor reg CFSR" -ex "monitor reg HFSR" -ex "monitor reg BFAR" \
     -ex "info registers" -ex "backtrace 10" \
     -ex "detach" -ex "quit" <build>/zephyr/zephyr.elf

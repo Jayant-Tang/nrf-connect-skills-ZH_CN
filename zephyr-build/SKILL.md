@@ -2,9 +2,9 @@
 name: zephyr-build
 description: >-
   构建与配置 NCS / Zephyr 应用：选择应用目录和 build 目录、读取 build provenance、用 nrfutil sdk-manager
-  toolchain env 初始化当前终端后运行 west build/menuconfig/twister，处理 qualified board target、sysbuild、Kconfig、
-  Devicetree overlay、snippet、MCUboot 与构建日志闭环。当需要编译、改配置、排查构建报错，或用户提到
-  west build、Kconfig、Devicetree、overlay、prj.conf、sysbuild、menuconfig、ram_report/rom_report 时使用。
+  toolchain env 或 toolchain launch（二选一）运行 west build/menuconfig/twister，处理 qualified board target、
+  sysbuild、Kconfig、Devicetree overlay、snippet、MCUboot 与构建日志闭环。当需要编译、改配置、排查构建报错，
+  或用户提到 west build、Kconfig、Devicetree、overlay、prj.conf、sysbuild、menuconfig、ram_report/rom_report 时使用。
 ---
 
 # 构建与配置（NCS / Zephyr）
@@ -13,7 +13,7 @@ description: >-
 
 ## 构建前 Gate
 
-1. **确认 NCS 版本**：优先读 build provenance、`west.yml`、工程文档、现有 build log；仍无法确定时查 `nrfutil sdk-manager list --all-fields`。版本不唯一时停止询问用户。
+1. **确认 NCS 版本**：优先读 build provenance、`west.yml`、工程文档、现有 build log；未执行 `toolchain env` 时才可用 `nrfutil sdk-manager list --all-fields`。版本不唯一时停止询问用户。
 2. **确认 board target**：使用 qualified board target，例如 `nrf54l15dk/nrf54l15/cpuapp`。用户只给 SoC 或板卡简称时，用 Nordic MCP 查候选；候选不唯一时停止询问用户。
 3. **确认应用目录**：应用目录必须包含应用级 `CMakeLists.txt`。不要把 NCS 根目录当应用目录。
 4. **选择 build 目录**：列出应用下的 `build`、`build_*`，以及含 `.vscode-nrf-connect.json`、`build_info.yml`、`CMakeCache.txt`、`build.ninja`、`zephyr/` 的目录。多个候选且用户未指定时停止询问。
@@ -23,14 +23,22 @@ description: >-
    - freestanding application：应用在 NCS workspace 外，但使用已安装 NCS 构建。
    - 非 Zephyr/NCS 工程：停止并让用户提供 SDK 路径、工程路径、NCS 版本和 board target。
 
-## 初始化当前终端（MUST）
+## 工具链模式（MUST）
 
-执行任何 `west`、CMake、Ninja 或 Twister 命令前，按以下步骤初始化当前终端：
+`toolchain env` 与 `toolchain launch` 二选一，禁止混用：
 
-1. 用 `nrfutil sdk-manager list --all-fields` 确认 `<version>` 和 `<ncs-install-dir>`，并检查 `<ncs-install-dir>/zephyr` 存在。
-2. 根据当前 Shell 执行下方对应命令。不要使用 `--terminal`，也不要为每条构建命令重复调用 `nrfutil ... launch`。
+- **env**：只初始化一次；此后直接执行 `west` 等命令，禁止再次调用 `sdk-manager list/env/launch`。仅用 `west --version`、`west topdir` 验证。切换版本时开新终端。
+- **launch**：不执行 `toolchain env`；每条 `west` 等命令都使用同一个 launch wrapper。
+
+`env` 后 PATH 中的 `nrfutil` 可能只有 `device` 子命令。
+
+## 模式 A：初始化当前终端（MUST）
+
+在尚未初始化的当前终端中，执行任何 `west`、CMake、Ninja 或 Twister 命令前按以下步骤初始化：
+
+1. 确认版本、安装目录和 Zephyr 目录；必要时执行一次 `nrfutil sdk-manager list --all-fields`。
+2. 根据当前 Shell 执行下方对应命令。不要使用 `--terminal`。
 3. 设置 `ZEPHYR_BASE` 后运行 `west --version` 和 `west topdir`；任一失败都不得继续构建。
-4. 一个终端只初始化一次。切换 NCS 版本时打开新终端，避免不同版本的路径同时残留在 `PATH` 中。
 
 ### Windows PowerShell
 
@@ -74,7 +82,7 @@ export ZEPHYR_BASE="$HOME/ncs/v3.4.0/zephyr"
 
 ## 构建命令
 
-| 目的 | 命令（当前终端完成环境初始化后直接执行） |
+| 目的 | 模式 A 命令（当前终端完成环境初始化后直接执行） |
 |------|------|
 | 新建或重配构建 | `west build -b <board_target> -d <selected-build-dir> <app-dir>` |
 | 复用已选 build 目录 | `west build -d <selected-build-dir>` |
@@ -87,6 +95,13 @@ export ZEPHYR_BASE="$HOME/ncs/v3.4.0/zephyr"
 | 拉取二进制 blob | `west blobs fetch <module>` |
 | 列出开发板 | `west boards` |
 | 运行测试 | `twister -T <path> -p <board>` |
+
+模式 B 的一次性命令必须完整包在 wrapper 中，例如：
+
+```bash
+nrfutil sdk-manager toolchain launch --ncs-version=<version> -- \
+  west build -b <board_target> -d <selected-build-dir> <app-dir>
+```
 
 示例：为 freestanding application 执行 pristine 构建：
 

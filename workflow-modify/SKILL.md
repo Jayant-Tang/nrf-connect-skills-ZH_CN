@@ -35,7 +35,7 @@ description: >-
 4. **记录基线**：动手前读取 git 状态与目标文件当前内容，保留本次改动边界。工作区已有用户改动时只叠加必要修改，不还原用户改动。
 5. **编辑前说明**：用一句话说明将修改哪些文件、为什么改、影响面是什么。涉及破坏性硬件动作时必须先取得用户明确授权。
 6. **执行修改**：按现有工程风格改最小范围；配置改动优先放在应用层 `prj.conf`、`sysbuild.conf`、`boards/<normalized-board-target>.overlay` 或明确的 overlay/conf fragment，不改 SDK 上游文件。改自定义驱动、binding、`module.yml` 或 `DEVICE_DT_INST_DEFINE` 时读取 [zephyr-custom-driver](../zephyr-custom-driver/SKILL.md)；改 nRF54L sQSPI、`nordic,nrf-sqspi`、`cpuflpr_vpr` 或 MSPI 子设备时读取 [nrf54l-sqspi](../nrf54l-sqspi/SKILL.md)。
-7. **自测闭环**：读取 [zephyr-build](../zephyr-build/SKILL.md) 选择构建目录并构建；成功后读取 [zephyr-flash](../zephyr-flash/SKILL.md) 烧录或复位；读取 [zephyr-serial-log](../zephyr-serial-log/SKILL.md) 或 [zephyr-debug](../zephyr-debug/SKILL.md) 验证输出。改 Kconfig、Devicetree、board target、sysbuild、pinctrl 后使用 pristine 构建。
+7. **自测闭环**：读取 [zephyr-build](../zephyr-build/SKILL.md)，选定工具链模式并全程沿用；然后 build → [flash](../zephyr-flash/SKILL.md) → [serial](../zephyr-serial-log/SKILL.md) / [debug](../zephyr-debug/SKILL.md)。改 Kconfig、Devicetree、board target、sysbuild、pinctrl 后使用 pristine 构建。
 8. **独立验收（必须，不可自验）**：自测通过后读取 [clean-agent](../clean-agent/SKILL.md)，只给需求、验收标准和复现步骤，让全新只读 agent 判定 PASS/FAIL。**自己改的代码不能只靠自己测通过就收工**（见总纲铁律 4）。FAIL 时回到第 6 步。
 9. **收尾**：总结改动、验证命令和结果；未能执行的硬件验证要说明缺少的设备、SN、端口或用户操作。
 

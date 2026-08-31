@@ -23,16 +23,16 @@ description: >-
 标准 NCS/Zephyr 构建产物优先使用 west runner：
 
 ```bash
-nrfutil sdk-manager toolchain launch --ncs-version=<version> -- \
-  west flash -d <selected-build-dir>
+west flash -d <selected-build-dir>
 ```
 
 多个调试器连接时指定 SEGGER/J-Link 序列号：
 
 ```bash
-nrfutil sdk-manager toolchain launch --ncs-version=<version> -- \
-  west flash -d <selected-build-dir> --dev-id <segger_id>
+west flash -d <selected-build-dir> --dev-id <segger_id>
 ```
+
+工具链模式继承 [zephyr-build](../zephyr-build/SKILL.md)；launch 模式按其规则添加 wrapper。
 
 ## 直接烧录：nrfutil device program
 
