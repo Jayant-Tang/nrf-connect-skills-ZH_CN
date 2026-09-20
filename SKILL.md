@@ -129,8 +129,10 @@ description: >-
 - **要烧录 / 操作设备**（烧 hex、复位、擦除、恢复、列设备）→ 读取 [zephyr-flash](zephyr-flash/SKILL.md)。
 - **要读串口 / 验证启动日志 / 选 COM 口**（端口映射、DTR、UART monitor、boot log 比对）→ 读取 [zephyr-serial-log](zephyr-serial-log/SKILL.md)。
 - **要调试 / 诊断**（SEGGER RTT、J-Link、`west debug` / `attach`、fault/crash 分析）→ 读取 [zephyr-debug](zephyr-debug/SKILL.md)。
+- **要分析 coredump / 崩溃转储**（`DEBUG_COREDUMP`、flash 分区后端、取 dump、GDB 离线回溯调用栈）→ 读取 [zephyr-coredump](zephyr-coredump/SKILL.md)。
 - **nRF54L 引脚分配 / pinctrl / GPIO 跨域**（外设不工作、`NRF_PSEL`、domain↔端口）→ 读取 [nrf54l-pinctrl](nrf54l-pinctrl/SKILL.md)。
 - **nRF54L sQSPI / Zephyr MSPI**（`nordic,nrf-sqspi`、`SDP_MSPI_*`、`cpuflpr_vpr`、sQSPI 外设不通）→ 读取 [nrf54l-sqspi](nrf54l-sqspi/SKILL.md)。
 - **Zephyr 自定义驱动接入**（out-of-tree driver、`ZEPHYR_EXTRA_MODULES`、`module.yml`、binding、`DEVICE_DT_INST_DEFINE`）→ 读取 [zephyr-custom-driver](zephyr-custom-driver/SKILL.md)。
 - **用 nrfutil 直接读写存储**（RRAM/RAM/外部 QSPI flash、UICR/OTP 的读写擦 dump）→ 读取 [nrfutil-memory](nrfutil-memory/SKILL.md)。
 - **BLE 射频 / DTM 测试**（Direct Test Mode、2-wire UART 19200、TX/RX/PER、射频认证）→ 读取 [ble-dtm](ble-dtm/SKILL.md)。
+- **要写工程 README / 双语项目文档**（功能、设计意图、操作步骤、预期行为、功耗数据）→ 读取 [zephyr-readme](zephyr-readme/SKILL.md)。

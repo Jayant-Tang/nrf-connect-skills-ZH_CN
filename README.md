@@ -19,12 +19,14 @@ zephyr-expert/
 ├── zephyr-flash/             # 工具指南：烧录、复位、擦除、设备管理
 ├── zephyr-serial-log/        # 工具指南：串口日志、UART monitor、COM 口选择
 ├── zephyr-debug/             # 工具指南：GDB、J-Link、RTT、fault / crash 分析
+├── zephyr-coredump/          # 工具指南：coredump 启用、提取与 GDB 离线回溯
 │
 ├── nrf54l-pinctrl/           # 专项：nRF54L GPIO / pinctrl 引脚规划与校验
 ├── nrf54l-sqspi/             # 专项：nRF54L sQSPI soft peripheral / Zephyr MSPI
 ├── zephyr-custom-driver/     # 专项：out-of-tree 自定义驱动接入
 ├── nrfutil-memory/           # 专项：nrfutil device 读写 RRAM / UICR / OTP / 外部 flash
 ├── ble-dtm/                  # 专项：BLE Direct Test Mode 射频 / PHY 测试
+├── zephyr-readme/            # 专项：双语工程 README 编写（功能 / 设计意图 / 操作 / 预期行为）
 │
 └── clean-agent/              # 辅助：零上下文只读子 Agent 独立验收
 ```
@@ -92,11 +94,13 @@ Claude Code 会自动扫描 `~/.claude/skills/` 下的 `SKILL.md`，并在 `avai
 | 烧录 hex、复位、擦除、恢复设备 | `zephyr-flash/SKILL.md` |
 | 读串口 / boot log / 选 COM 口 | `zephyr-serial-log/SKILL.md` |
 | GDB / J-Link 直连、RTT、fault 寄存器 / crash 分析、APPROTECT | `zephyr-debug/SKILL.md` |
+| coredump 崩溃转储：启用、取 dump、离线回溯调用栈 | `zephyr-coredump/SKILL.md` |
 | nRF54L 引脚分配 / pinctrl / GPIO 跨域 | `nrf54l-pinctrl/SKILL.md` |
 | nRF54L sQSPI / MSPI bus | `nrf54l-sqspi/SKILL.md` |
 | out-of-tree 自定义驱动 | `zephyr-custom-driver/SKILL.md` |
 | nrfutil 读写 RRAM / UICR / OTP / 外部 flash | `nrfutil-memory/SKILL.md` |
 | BLE DTM / 射频 PHY 测试 | `ble-dtm/SKILL.md` |
+| 写双语工程 README / 项目文档 | `zephyr-readme/SKILL.md` |
 
 ---
 

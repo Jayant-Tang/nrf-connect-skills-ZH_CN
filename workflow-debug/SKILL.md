@@ -2,7 +2,7 @@
 name: workflow-debug
 description: >-
   zephyr-expert 编排层的「调试 / 排障」工作流：现象异常但根因未知时，先稳定复现并取得 runtime 证据，
-  再用假设驱动循环（一次只改一个变量）缩小范围、定位根因；诊断委托 zephyr-debug / zephyr-serial-log，
+  再用假设驱动循环（一次只改一个变量）缩小范围、定位根因；诊断委托 zephyr-debug / zephyr-serial-log / zephyr-coredump，
   根因明确后转 workflow-modify 修复并回归验收。当任务是查崩溃 / HardFault / fault、卡死、外设无反应、
   数值或时序不对、偶发异常等需要定位根因时使用；已知改什么用 workflow-modify，纯查原理不动硬件用 workflow-ask。
 ---
@@ -29,7 +29,7 @@ description: >-
 1. **定义现象**：精确写出"期望 vs 实际"和复现步骤，存入 `.agent/repro.md`（后续 clean-agent 验收直接用）。
 2. **稳定复现**：读取 [zephyr-flash](../zephyr-flash/SKILL.md) 烧录、[zephyr-serial-log](../zephyr-serial-log/SKILL.md) 或 [zephyr-debug](../zephyr-debug/SKILL.md) 采集，确认能稳定触发；偶发问题先想办法提高复现率。
 3. **收集证据**（按现象选工具，只取不改）：
-   - 崩溃 / HardFault / fault → [zephyr-debug](../zephyr-debug/SKILL.md)（halt 决策表、CFSR/HFSR/BFAR、addr2line）。
+   - 崩溃 / HardFault / fault → [zephyr-debug](../zephyr-debug/SKILL.md)（halt 决策表、CFSR/HFSR/BFAR、addr2line）；工程启用了 coredump 后端、或现场 / 偶发崩溃无法挂调试器时 → [zephyr-coredump](../zephyr-coredump/SKILL.md)（取 flash 分区 dump + GDB 离线回溯调用栈）。**注意先读 dump 再烧录**，重烧会擦除 dump 分区。
    - 启动 / 运行日志异常 → [zephyr-serial-log](../zephyr-serial-log/SKILL.md)；低侵入用 RTT（见 zephyr-debug）。
    - 外设无反应 / GPIO 中断不触发 → [zephyr-debug](../zephyr-debug/SKILL.md) 外设在线检查 + [nrf54l-pinctrl](../nrf54l-pinctrl/SKILL.md) / [nrf54l-sqspi](../nrf54l-sqspi/SKILL.md)。
    - 配置 / 存储可疑 → 检查 build 产物（`.config`、`zephyr.dts`）、[nrfutil-memory](../nrfutil-memory/SKILL.md) 读 RRAM/UICR。
